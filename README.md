@@ -1,5 +1,9 @@
 # Auxita Code Challenege
 
+## In case you don't have Vue.js
+```
+npm install -g @vue/cli
+```
 ## Project setup
 ```
 npm install
@@ -12,7 +16,6 @@ npm install --save-dev @vue/test-utils
 npm run serve
 npm run build
 ```
-
 ## App running at:
 ```
 Local: http://localhost:8080/
