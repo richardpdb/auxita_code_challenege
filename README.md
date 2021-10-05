@@ -1,6 +1,6 @@
 # Auxita Code Challenege
 
-## In case you don't have Vue.js
+## In case you don't have Vue.js installed
 ```
 npm install -g @vue/cli
 ```
