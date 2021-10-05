@@ -1,5 +1,4 @@
 <template>
-
   <div class="form">
     <div class="form-toggle"></div>
     <div class="form-panel one">
@@ -7,47 +6,51 @@
         <h1> {{labels.form_labels.app_title}}</h1>
       </div>
       <div class="form-content">
+          <!-- Hypertension Form -->
         <form>
           <div class="form-group">
             <h2 class="disease_title"> {{labels.form_labels.hypertension_title}} </h2>
             <label for="SysBP"> {{labels.form_labels.sysbp_lb}} </label>
-            <input id="SysBP" type="number" name="SysBP" v-model="sysBP" required="required" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+            <input id="SysBP" type="number" name="SysBP" v-model="sysBP" required="required" 
+                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
           </div>
           <div class="form-group">
             <label for="DiaBP"> {{labels.form_labels.diabp_lb}} </label>
-            <input name="DiaBP" type="number" v-model="diaBP" required="required" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+            <input name="DiaBP" type="number" v-model="diaBP" required="required" 
+                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
           </div>
           <div class="form-group">
             <label for="date"> {{labels.form_labels.date}} </label>
             <input id="date" type="date" v-model="dateHypertension" required="required">
           </div>
           <div class="form-group">
-            <button type="button" v-on:click="calculateHypertension">{{labels.form_labels.submit_btn}}</button>
+            <button type="button" class="hypertension_btn" v-on:click="calculateHypertension">
+              {{labels.form_labels.submit_btn}}
+            </button>
           </div>
         </form>
       </div>
-
       <br>
-
       <div class="form-content">
+        <!-- Kidney Disease Form -->
         <form>
           <div class="form-group">
             <h2 class="disease_title"> {{labels.form_labels.kidney_title}} </h2>
             <label for="eGFR">{{labels.form_labels.egfr_lb}}</label>
-            <input name="eGFR" type="number" v-model="eGFR" required="required" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+            <input name="eGFR" type="number" v-model="eGFR" required="required" 
+                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
           </div>
           <div class="form-group">
             <label for="date">Date</label>
             <input id="date" type="date" v-model="dateKidney" required="required" />
           </div>
           <div class="form-group">
-            <button type="button" v-on:click="evaluateKiney">{{labels.form_labels.submit_btn}}</button>
+            <button type="button" class="kidney_btn" v-on:click="evaluateKidney">{{labels.form_labels.submit_btn}}</button>
           </div>
         </form>
       </div>
     </div>
 </div>
-
 </template>
 
 <script>
@@ -57,6 +60,7 @@ import Swal from 'sweetalert2'
 export default {
   name: 'App',
  
+ //Vue Model
   data() {
     return {
       labels,
@@ -67,11 +71,12 @@ export default {
       dateKidney: '',
       hypertensionClassification: '',
       kidneyDiseaseClassification: '',
-      eGFR_drop: 0,
+      last_eGFR: 0,
     }
   },
 
   methods: {
+    //Method that calculate the stage of hypertension
     calculateHypertension() {
       /*
         If SysBP is Greater than or Equal to 180 AND DiaBP Greater than or Equal to 120
@@ -104,7 +109,7 @@ export default {
           this.hypertensionClassification = "Stage 3"
 
           Swal.fire({
-            title: 'Classification: ' + this.hypertensionClassification,
+            title:  this.hypertensionClassification,
             text: 'SysBP: ' + this.sysBP + ', ' + 'DiaBP: ' + this.diaBP + ', ' + 'Date: ' + this.dateHypertension,
             icon: 'info',
             confirmButtonText: 'Cool'
@@ -114,7 +119,7 @@ export default {
           this.hypertensionClassification = "Stage 2"
 
           Swal.fire({
-            title: 'Classification: ' + this.hypertensionClassification,
+            title:  this.hypertensionClassification,
             text: 'SysBP: ' + this.sysBP + ', ' + 'DiaBP: ' + this.diaBP + ', ' + 'Date: ' + this.dateHypertension,
             icon: 'info',
             confirmButtonText: 'Cool'
@@ -124,7 +129,7 @@ export default {
           this.hypertensionClassification = "Stage 1"
 
           Swal.fire({
-            title: 'Classification: ' + this.hypertensionClassification,
+            title:  this.hypertensionClassification,
             text: 'SysBP: ' + this.sysBP + ', ' + 'DiaBP: ' + this.diaBP + ', ' + 'Date: ' + this.dateHypertension,
             icon: 'info',
             confirmButtonText: 'Cool'
@@ -134,7 +139,7 @@ export default {
           this.hypertensionClassification = "No Hypertension"
 
           Swal.fire({
-            title: 'Classification: ' + this.hypertensionClassification,
+            title:  this.hypertensionClassification,
             text: 'SysBP: ' + this.sysBP + ', ' + 'DiaBP: ' + this.diaBP + ', ' + 'Date: ' + this.dateHypertension,
             icon: 'success',
             confirmButtonText: 'Cool'
@@ -143,7 +148,19 @@ export default {
       }
     },
 
-    evaluateKiney() {
+    //Method that calculates the classification of kidney disease
+    evaluateKidney() {
+
+      /*
+        If eGFR is Greater than or equal to 90 (inclusive) ->	Normal
+        If eGFR is between 60 and 89 (all inclusive) ->	Mildly Decreased
+        If eGFR is between 45 and 59 (all inclusive) ->	Mild to moderate
+        If eGFR is between 30 and 44 (all inclusive) ->	Moderate to Severe
+        If eGFR is between 15 and 29 (all inclusive) ->	Severely Decreased
+        Everything else	Kidney Failure :(
+
+        if eGFR value is dropped by 20% or more in the consecutive reading (chronologically) include that drop in the output.
+      */ 
 
       if(this.eGFR <= 0 || this.dateKidney == '') {
 
@@ -155,7 +172,17 @@ export default {
           })
       }
 
-      
+      //Calculation of drop % based on the last eGFR reading
+      let difference = this.last_eGFR - this.eGFR;
+      let dropPercentage = ((difference * 100) / this.eGFR).toFixed();
+      let dropPercentageToShow = '';
+
+      if(dropPercentage >= 20) {
+        dropPercentageToShow = ', Drop: ' + dropPercentage + '%'
+      }
+      else {
+        dropPercentageToShow = '';
+      }
 
       if(this.eGFR > 0 && this.dateKidney != '') {
 
@@ -163,8 +190,8 @@ export default {
           this.kidneyDiseaseClassification = "Normal"
 
           Swal.fire({
-            title: 'Classification: ' + this.kidneyDiseaseClassification,
-            text: 'eGFR: ' + this.eGFR + ', ' + 'Date: ' + this.dateKidney,
+            title: this.kidneyDiseaseClassification,
+            text: 'eGFR: ' + this.eGFR + ', ' + 'Date: ' + this.dateKidney + dropPercentageToShow,
             icon: 'success',
             confirmButtonText: 'Cool'
           })
@@ -173,8 +200,8 @@ export default {
           this.kidneyDiseaseClassification = "Mildly Decreased"
 
           Swal.fire({
-            title: 'Classification: ' + this.kidneyDiseaseClassification,
-            text: 'eGFR: ' + this.eGFR + ', ' + 'Date: ' + this.dateKidney,
+            title: this.kidneyDiseaseClassification,
+            text: 'eGFR: ' + this.eGFR + ', ' + 'Date: ' + this.dateKidney + dropPercentageToShow,
             icon: 'info',
             confirmButtonText: 'Cool'
           })
@@ -183,8 +210,8 @@ export default {
           this.kidneyDiseaseClassification = "Mild to moderate"
 
           Swal.fire({
-            title: 'Classification: ' + this.kidneyDiseaseClassification,
-            text: 'eGFR: ' + this.eGFR + ', ' + 'Date: ' + this.dateKidney,
+            title: this.kidneyDiseaseClassification,
+            text: 'eGFR: ' + this.eGFR + ', ' + 'Date: ' + this.dateKidney + dropPercentageToShow,
             icon: 'info',
             confirmButtonText: 'Cool'
           })
@@ -193,8 +220,8 @@ export default {
           this.kidneyDiseaseClassification = "Moderate to Severe"
 
           Swal.fire({
-            title: 'Classification: ' + this.kidneyDiseaseClassification,
-            text: 'eGFR: ' + this.eGFR + ', ' + 'Date: ' + this.dateKidney,
+            title: this.kidneyDiseaseClassification,
+            text: 'eGFR: ' + this.eGFR + ', ' + 'Date: ' + this.dateKidney + dropPercentageToShow,
             icon: 'info',
             confirmButtonText: 'Cool'
           })
@@ -203,8 +230,8 @@ export default {
           this.kidneyDiseaseClassification = "Severely Decreased"
 
           Swal.fire({
-            title: 'Classification: ' + this.kidneyDiseaseClassification,
-            text: 'eGFR: ' + this.eGFR + ', ' + 'Date: ' + this.dateKidney,
+            title: this.kidneyDiseaseClassification,
+            text: 'eGFR: ' + this.eGFR + ', ' + 'Date: ' + this.dateKidney + dropPercentageToShow,
             icon: 'info',
             confirmButtonText: 'Cool'
           })
@@ -213,16 +240,14 @@ export default {
           this.kidneyDiseaseClassification = "Kidney Failure"
 
           Swal.fire({
-            title: 'Classification: ' + this.kidneyDiseaseClassification,
-            text: 'eGFR: ' + this.eGFR + ', ' + 'Date: ' + this.dateKidney,
+            title: this.kidneyDiseaseClassification,
+            text: 'eGFR: ' + this.eGFR + ', ' + 'Date: ' + this.dateKidney + dropPercentageToShow,
             icon: 'error',
             confirmButtonText: 'Cool'
           })
         }
-
       }
-
-      this.eGFR_drop = this.eGFR;
+      this.last_eGFR = this.eGFR;
     }
   }
 }
@@ -273,7 +298,6 @@ export default {
     font-weight: 550;
     line-height: 1;
     letter-spacing: 0.2em;
-    
   }
 
   .form-group input {
@@ -307,14 +331,12 @@ export default {
     line-height: inherit;
     text-transform: uppercase;
     cursor: pointer;
-    
   }
 
   .form-panel {
     padding: 30px calc(5% + 60px) 60px 60px;
     box-sizing: border-box;
   }
-
   
   .form-header {
     margin: 0 0 40px;
@@ -336,5 +358,4 @@ export default {
     font-weight: 700;
     text-transform: uppercase;
   }
-
 </style>
