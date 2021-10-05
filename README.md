@@ -13,3 +13,7 @@ npm run serve
 npm run build
 ```
 
+## App running at:
+```
+Local: http://localhost:8080/
+```
